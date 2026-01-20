@@ -1,0 +1,35 @@
+name: Build CV
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get files
+      uses: actions/checkout@v4
+
+    - name: Install LaTeX
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-full
+
+    - name: Make PDF
+      run: |
+        pdflatex cv.tex
+        pdflatex cv.tex
+
+    - name: Save PDF
+      run: |
+        mkdir public
+        cp cv.pdf public/
+
+    - name: Put CV online
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
